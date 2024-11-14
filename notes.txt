@@ -1,0 +1,17 @@
+This is a directory containing notes and solutions to
+Marijn Haverbeke's "Eloquent JavaScript" found here:
+https://eloquentjavascript.net/index.html
+
+
+### Rob's JavaScript Notes ###
+To import a module in JavaScript, we use 'require'.
+> const util = require('util');
+
+> const fs = require('fs'); // Importing a built-in module.
+> const _ = require('lodash'); // Importing a third-party module.
+> const myModule = require('./myModule'); // Importing a local file (relative path).
+
+
+
+In python, this might look like:
+> import util
