@@ -35,6 +35,39 @@ and its prototype.
     -> Classes can extend other classes using the 'extends' keyword,
        enabling the creation of subclasses. 
 
+By using the statis keyword to declare a method, we can create alternate
+constructors:
+*/
+//e.g:
+
+class Temperature {
+  constructor(celsius) {
+    this.celsius = celsius;
+  }
+
+  get fahrenheit() {
+    return this.celsius * 1.8 + 32;
+  }
+
+  set fahrenheit(value) {
+    this.celsius = (value - 32) / 1.8;
+  }
+
+  // alternative constructor
+  static fromFahrenheit(value) {
+    return new Temperature((value - 32) / 1.8);
+  }
+}
+
+let temp = new Temperature(22);
+console.log(temp.fahrenheit); // -> 71.6
+temp.fahrenheit = 86;
+console.log(temp.celsius); // -> 30
+
+let boil = Temperature.fromFahrenheit(212)
+console.log(boil.celsius) // -> 100
+
+/*
 Getters & Setters.
 
 You can define the special methods 'get' and 'set' with their respective
@@ -181,7 +214,93 @@ console.log(myCar.getMake());
 // Exercises
 
 // A Vector Type
-
+// ((My Solution))
 class Vec {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  plus(vector) {
+    return new Vec(
+      this.x + vector.x,
+      this.y + vector.y
+    );
+  }
+
+  minus(vector) {
+    return new Vec(
+      this.x - vector.x,
+      this.y - vector.y
+    );
+  }
+
+  get length() {
+    return Math.sqrt((this.x ** 2) + (this.y ** 2))
+  }
+}
+
+console.log(new Vec(1, 2).plus(new Vec(2, 3)));
+console.log(new Vec(1, 2).minus(new Vec(2, 3)));
+console.log(new Vec(3, 4).length);
+
+let myVec = new Vec(1, 2);
+
+console.log(typeof myVec); // -> object
+console.log(myVec instanceof Vec); // -> true
+
+
+// Groups (sets)
+// ((My Solution))
+class Group {
+  #elements;
+
+  constructor() {
+    this.#elements = [];
+  }
+
+  add(n) {
+    if (!this.#elements.includes(n)) {
+      this.#elements.push(n)
+    }
+  }
+
+  delete(n) {
+    if (this.#elements.includes(n)) {
+      this.#elements = this.#elements.filter(function(element) {
+        return element !== n
+      });
+    }
+  }
+
+  has(n) {
+    if (this.#elements.includes(n)) {
+      return true
+    } else {return false}
+  }
+
+  print() {
+    console.log(this.#elements)
+  }
+
+  static from(array) {
+    let uniques = [];
+    let group = new Group()
+    for (let element of array) {
+      if (!uniques.includes(element)) {
+        uniques.push(element)
+        group.add(element)
+      }
+    }
+    return group
+  }
 
 }
+
+let group = Group.from([10, 20]);
+console.log(group.has(10)); // -> true
+console.log(group.has(30)); // -> false
+group.add(10);
+group.delete(10);
+console.log(group.has(10)); // -> false
+group.print()
