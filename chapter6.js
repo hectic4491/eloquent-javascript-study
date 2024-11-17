@@ -250,7 +250,7 @@ console.log(typeof myVec); // -> object
 console.log(myVec instanceof Vec); // -> true
 
 
-// Groups (sets)
+// Groups & Iterable Groups (sets)
 // ((My Solution))
 class Group {
   #elements;
@@ -304,3 +304,7 @@ group.add(10);
 group.delete(10);
 console.log(group.has(10)); // -> false
 group.print()
+
+
+// Iterable Group
+// ((passed))
