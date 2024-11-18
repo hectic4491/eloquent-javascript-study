@@ -3,15 +3,29 @@ Marijn Haverbeke's "Eloquent JavaScript" found here:
 https://eloquentjavascript.net/index.html
 
 
-### Rob's JavaScript Notes ###
-To import a module in JavaScript, we use 'require'.
-> const util = require('util');
-
-> const fs = require('fs'); // Importing a built-in module.
-> const _ = require('lodash'); // Importing a third-party module.
-> const myModule = require('./myModule'); // Importing a local file (relative path).
+Chapters Skipped:
+-> Chapter7 (Project)
+-> Chapter9 (Regular Expressions)
+-> Chapter11 (Asynchornous Programming)
+-> Chapter12 (Project)
 
 
+Exercises Skipped:
+-> Chapter 4
+    -> Deep 
+    
+-> Chapter 5
+    -> Dominant Writing Direction
 
-In python, this might look like:
-> import util
+-> Chapter 6
+    -> Iterable Group
+
+-> Chapter 7
+    -> All
+
+-> Chapter 9
+    -> All
+
+-> Chapter 11
+    -> All
+
