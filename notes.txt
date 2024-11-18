@@ -29,3 +29,14 @@ Exercises Skipped:
 -> Chapter 11
     -> All
 
+
+
+Extra Notes on Chapter 13: (come back to this chapter)
+    -> socketsand ports
+    -> HTTP
+    -> Internet Protocl Suite (IP Suite) or (TCP/IP)
+    -> TCP
+    -> CGI
+    -> Synchronous and Asynchornous communication.
+    -> DNS
+    -> URL
