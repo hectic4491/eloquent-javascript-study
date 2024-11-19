@@ -428,80 +428,96 @@ JavaScript code can manipulate an element's style directly through its style
 property.
 */
 
+// ### Exercises ###
+// ((My solutions))
+// Refer to the 'chapter14exercise1/2/3.html' files for solutions.
 
+
+// Exercise 2 Notes
 /*
-### Exercises ###
-// Build a Table
-// ((My solution))
+The document.getElementByTagName method returns all child
+elements with a given tag name. Implement your own version of this
+as a function that takes a node and a string (the tag name) as arguments
+and returns an array containing all descendant element nodes with the
+given tag name. Your function should go through the document itself.
+It may not use a method like .querySelectorAll to do the work.
+
+To find the tag name of an element, use its .nodeName property. But note
+that this will return the tag name in all uppercase. Use the .toLowerCase 
+or .toUpperCase string methods to compensate for this.
 
 
-For each row, the <table> tag contains a <tr> tag. Inside of these <tr> tags
-we can put cell elements: either heading cells <th> or regular cells <td>.
+# NODES #
 
-<h1>Mountains</h1>
+Understanding DOM Nodes:
+ Node Types:
+  Element Nodes: Represent HTML elements (e.g., <div>, <p>, <span>, etc).
+  Text Nodes: Represent the text content inside an element.
+  Attribute Nodes: Attribute Nodes: Represent the attributes of
+                    an element (e.g., class, id, etc.).
+  Comment Nodes: Represent comments in the HTML.
 
-<div id="mountains"></div>
+ Hierarchy:
+  The DOM represents a tree structure where each node is connected,
+  forming parent-child and sibling relationships.
 
-<script>
-  const MOUNTAINS = [
-    {name: "Kilimanjaro", height: 5895, place: "Tanzania"},
-    {name: "Everest", height: 8848, place: "Nepal"},
-    {name: "Mount Fuji", height: 3776, place: "Japan"},
-    {name: "Vaalserberg", height: 323, place: "Netherlands"},
-    {name: "Denali", height: 6168, place: "United States"},
-    {name: "Popocatepetl", height: 5465, place: "Mexico"},
-    {name: "Mont Blanc", height: 4808, place: "Italy/France"}
-  ];
+
+Accessing Nodes:
+  document.getElementById(id): Accesses an element by its ID.
+  document.getElementsByClassName(className): Accesses elements by their
+    class name.
+  document.getElementsByTagName(tagName): Accesses elements by their
+    tag name.
+  document.querySelector(selector): Accesses the first element that 
+    matches a CSS selector.
+  document.querySelectorAll(selector): Accesses all elements that
+    match a CSS selector.
+
+Creating and Modifying Nodes.
+  Create Elements: Use document.createElement(tagName) to create a
+                   new element.
+
+    const = newDiv = document.createElement('div');
   
-  // Solution Below:
 
- 
-  // First, create a reference to the element where we want
-  // the table to be appended to.
-  const mountainDiv = document.getElementById("mountains");
+  Set Attributes: Use element.setAttribute(attribute, value) to
+                  create a new element.
 
-  // Next, create the table element.
-  const mountainTable = document.createElement("table");
-  const mountainTableHeaders = document.createElement("tr");
+    newDiv.setAttribute('class', 'new-class');
+  
 
-  // We assume all objects have identical data in the same order.
+  Create Text Nodes: Use document.createTextNode(text) to create a 
+                     text node.
 
-  // Heres a function to build the headers.
-  function buildHeader() {
-    for (const headerName of Object.keys(MOUNTAINS[0])) {
-      const header = document.createElement("th");
-      header.textContent = headerName;
-      mountainTableHeaders.appendChild(header); 
-    }
-    mountainTable.appendChild(mountainTableHeaders);
-  }
+    const = textNode = document.createTextNode('Hello, world!');
+  
 
-  // Heres a function to build the remaining data.
-  function buildContent() {
-    for (const mountain of MOUNTAINS) {
-      const newRow = document.createElement("tr");
-      
-      const nameCell = document.createElement("td");
-      nameCell.textContent = mountain["name"];
-      newRow.appendChild(nameCell);
-      
-      const heightCell = document.createElement("td");
-      heightCell.textContent = mountain["height"];
-      newRow.appendChild(heightCell);
-      
-      const placeCell = document.createElement("td");
-      placeCell.textContent = mountain["place"];
-      newRow.appendChild(placeCell);
+  Append Nodes: Use myParentNode.appendChild(newNode) to append a
+                node to a parent element.
 
-      mountainTable.appendChild(newRow);
-    }
-  }
+    newDiv.appendChild(textNode);
+    document.body.appendChild(newDiv); 
 
-  buildHeader();
+  
+Traversing Nodes:
+  Parent Node:      node.parentNode
+  Child Nodes:      node.childNodes
+  First Child:      node.firstChild
+  Last Child:       node.lastChild
+  Next Sibling:     node.nextSibling
+  Previous Sibling: node.previousSibling
 
-  buildContent();
 
-  mountainDiv.appendChild(mountainTable);
-</script>
-
+Example: Traversing Nodes:
 */
+
+const list = document.getElementById('myList');
+const firstItem = list.firstChild    // Get the first child node
+firstItem.style.color = 'red';    // Change its color to red
+
+const allItems = list.childNodes;   // Get all child nodes
+allItems.foreach(item => {
+  if (item.nodeType === node.ELEMENT_NODE) {
+  item.style.fontWeight = 'bold'; // Make text bold for element nodes
+  }
+});
