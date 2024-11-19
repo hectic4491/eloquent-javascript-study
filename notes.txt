@@ -29,6 +29,9 @@ Exercises Skipped:
 -> Chapter 11
     -> All
 
+-> Chapter 14
+    -> The Cat's Hat
+
 
 
 Extra Notes on Chapter 13: (come back to this chapter)
