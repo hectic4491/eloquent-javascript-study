@@ -13,7 +13,7 @@ A good mechanism for finding out when a key is pressed is to actively
 notify the code when an event occurs. Browsers do this by allowing us
 to register functions as [handlers] for specific events.
 
-e.g:
+e.g.: example 1.
 
 <p>Click this document to activate the handler.</p>
 <script>
@@ -37,7 +37,7 @@ elements and some other types of objects. Event listeners are called only
 when the event happens in the context of the object on which they are
 registered.
 
-e.g:
+e.g.: example 2.
 
 <button>Click me</button>
 <p>No handler here.<.p>
@@ -67,7 +67,7 @@ there is already another handler on the element.
 The .removeEventListener method, called with arguments similar to
 .addEventListener, removes a handler.
 
-e.g.:
+e.g.: example 3.
 
 <button>Act-once button</button>
 <script>
@@ -86,6 +86,59 @@ to be able to pass the same function value on both methods.
 
 
 ## Event Objects
+
+Though we have ignored it so far, event handler functions are passed an
+argument: the [event object]. This object holds additional information
+about the event. For example, if we want to know which mouse button
+was pressed, we can look at the event object's button property.
+
+e.g.: example 4
+
+<button>Click me any way you want</button>
+<script>
+  let button = document.querySelector("button");
+  button.addEventListener("mousedown", event => {
+    if (event.button == 0) {
+      console.log("Left button");
+    } else if (event.button == 1) {
+      console.log("Middle button");
+    } else if (event.button == 2) {
+      console.log("Right button");
+    }
+  });
+</script>
+
+The information stored in an event object differs per type of event.
+(We'll discuss different types later in the chapter). The object's type
+property always holds a string identifying the event (such as "click" 
+or "mousedown").
+
+
+## Propagation
+
+For most event types, handlers registered on nodes with children will
+also recieve events that happen in the children. If a button inside a 
+paragraph is clicked, event handlers on the paragraph will also see the
+click event.
+
+But if both the paragraph and the button have a handler, the more
+specific handler—the one on the button—gets to go first. The event is
+said to [propagate] outward from the node where it happened to that
+node's parent node and on to the root of the document. Finally, after
+all handlers registered on a specific node have had their turn, handlers
+registered on the whole window get a chance to respond to the event.
+
+At any point, an event handler can call the .stopPropagation method on
+the event object to prevent handlers further up from receving the event.
+This can be useful when, for example, you have a button inside another
+clickable element and you don't want clicks on the button to activate 
+the outer element's click behavior.
+
+The following example registers "mousedown" handlers on both a button and
+the paragraph around it. When clicked with the right mouse button, the
+handler for the button calls .stopPropagation, which will prevent the
+handler on the paragraph from running. When the button is clicked with
+another mouse button, both handlers will run.
 
 
 */
