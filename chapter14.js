@@ -426,27 +426,82 @@ attaching styles to nodes directly and by defining rules that match certain
 nodes. There are many different style properties, such as 'color' or 'display.'
 JavaScript code can manipulate an element's style directly through its style
 property.
+*/
 
 
+/*
 ### Exercises ###
 // Build a Table
+// ((My solution))
 
 
 For each row, the <table> tag contains a <tr> tag. Inside of these <tr> tags
 we can put cell elements: either heading cells <th> or regular cells <td>.
 
-e.g:
+<h1>Mountains</h1>
 
-<table>
-  <tr>
-    <th>name</th>
-    <th>height</th>
-    <th>place</th>
-  </tr>
-  <tr>
-    <td>Kilimanjaro</td>
-    <td>5895</td>
-    <td>Tanzania</td>
-  </tr>
-</table>
+<div id="mountains"></div>
+
+<script>
+  const MOUNTAINS = [
+    {name: "Kilimanjaro", height: 5895, place: "Tanzania"},
+    {name: "Everest", height: 8848, place: "Nepal"},
+    {name: "Mount Fuji", height: 3776, place: "Japan"},
+    {name: "Vaalserberg", height: 323, place: "Netherlands"},
+    {name: "Denali", height: 6168, place: "United States"},
+    {name: "Popocatepetl", height: 5465, place: "Mexico"},
+    {name: "Mont Blanc", height: 4808, place: "Italy/France"}
+  ];
+  
+  // Solution Below:
+
+ 
+  // First, create a reference to the element where we want
+  // the table to be appended to.
+  const mountainDiv = document.getElementById("mountains");
+
+  // Next, create the table element.
+  const mountainTable = document.createElement("table");
+  const mountainTableHeaders = document.createElement("tr");
+
+  // We assume all objects have identical data in the same order.
+
+  // Heres a function to build the headers.
+  function buildHeader() {
+    for (const headerName of Object.keys(MOUNTAINS[0])) {
+      const header = document.createElement("th");
+      header.textContent = headerName;
+      mountainTableHeaders.appendChild(header); 
+    }
+    mountainTable.appendChild(mountainTableHeaders);
+  }
+
+  // Heres a function to build the remaining data.
+  function buildContent() {
+    for (const mountain of MOUNTAINS) {
+      const newRow = document.createElement("tr");
+      
+      const nameCell = document.createElement("td");
+      nameCell.textContent = mountain["name"];
+      newRow.appendChild(nameCell);
+      
+      const heightCell = document.createElement("td");
+      heightCell.textContent = mountain["height"];
+      newRow.appendChild(heightCell);
+      
+      const placeCell = document.createElement("td");
+      placeCell.textContent = mountain["place"];
+      newRow.appendChild(placeCell);
+
+      mountainTable.appendChild(newRow);
+    }
+  }
+
+  buildHeader();
+
+  buildContent();
+
+  mountainDiv.appendChild(mountainTable);
+</script>
+
 */
