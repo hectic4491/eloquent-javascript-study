@@ -140,5 +140,135 @@ handler for the button calls .stopPropagation, which will prevent the
 handler on the paragraph from running. When the button is clicked with
 another mouse button, both handlers will run.
 
+e.g.: example 5
+
+<p>A paragraph with a <button>button</button>.</p>
+<script>
+  let para = document.querySelector("p");
+  let button = document.querySelector("button");
+  para.addEventListener("mousedown", () => {
+    console.log("Handler for paragraph.");
+  });
+  button.addEventListener("mousedown", event => {
+    console.log("Hander for button.");
+    if (event.button == 2) event.stopPropagation();
+  });
+</script>
+
+Most event objects have a .target property that refer to the node where they
+originated. You can use this property to ensure that you're not accidentally
+handling something that propagated up from a node you do not want to handle.
+
+It is also possible to use the .target property to cast a wide net for a
+specific type of event. For example, if you have a node containing a long
+list of buttons, it may be more convenient to register a single click
+handler on the outer node and have it use the .target property to figure
+out whether a button was clicked, rather than registering individual
+handlers on all of the buttons.
+
+e.g.: example 6
+
+<button>A</button>
+<button>B</button>
+<button>C</button>
+<script>
+  document.body.addEventListener("click", event => {
+    if (event.target.nodeName == "BUTTON") {
+      console.log("Clicked", event.target.textContent);
+    }
+  });
+</script>
+
+
+## Default Actions
+
+Many events have a default action. If you click a link, you will be taken
+to the link's target. If you press the down arrow, the browser will scroll
+the page down. If you right-click, you'll get a context menu, and so on.
+
+For most types of events, the JavaScript event handlers are called before
+the default behavior takes place. If the handler doesn't want this normal
+behavior to happen, typically because it has already taken care of handling
+the event, it can call the .preventDefault method on the event object.
+
+This can be used to to implement your own keyboard shortcuts or context
+menus. It can also be used to obnoxiously interfere with the behavior that
+users expect. For example, here is a link that cannot be followed.
+
+e.g.: example 7
+
+<a href="https://developer.mozilla.org/">MDN</a>
+<script>
+  let link = document.querySelector("a");
+  link.addEventListener("click", event => {
+    console.log("Nope.");
+    event.preventDefault();
+  });
+</script>
+
+Try not to do such things without  a really good reason. It'll be unpleasent
+for people who use your pages when expected behavior is broken.
+
+Depending on the browser, some events can't be intercepted at all. On
+Chrome, for example, the keyboard shortcut to close the current tab (ctrl+w)
+cannot be handled by JavaScript.
+
+
+## Key Events
+
+
+
+## Pointer Events
+
+
+
+## Scroll Events
+
+
+
+## Focus Events
+
+
+
+## Load Event
+
+
+
+## Events and The Event Loop
+
+
+
+## Timers
+
+
+
+## Debouncing
+
+
+
+## Summary
+
+Event handlers make it possible to detect and react to events happening in
+our web page. the .addEventListener method is used to register such a
+handler.
+
+Each event has a type ("keydown", "focus", and so on) that identifies it.
+Most events are called on specific DOM element and then propagate to that
+element's ancestors, allowing handlers associated with those elements to
+handle them.
+
+When an event handler is called, it's passed as event object with additonal
+information about the event. This object also has methods that allow us to
+stop further propagation (.stopPropagation) and prevent the browser's
+default handling of the event (.preventDefault).
+
+Pressing a key fires "keydown" and "keyup" events. Pressing a mouse button
+fires "mousedown", "mouseup", and "click" events. Moving the mouse fires
+"mousemove" events. Touchscreen interaction will result in "touchstart",
+"touchmove", and "touched" events.
+
+Scrolling can be detected with the "scroll" event, and focus changes can be
+detected with the "focus" and "blur" events. When the document finishes
+loading, a "load" event fires on ther window.
 
 */
