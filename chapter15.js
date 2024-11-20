@@ -216,10 +216,130 @@ cannot be handled by JavaScript.
 
 ## Key Events
 
+When a key on the keyboard is pressed, your brower fires a "keydown"
+event. When it is released, you get a "keyup" event.
+
+e.g.: example 8
+
+  <p>This page turns violet when you hold the V key.</p>
+  <script>
+    window.addEventListener("keydown", event => {
+      if (event.key == "v") {
+        console.log("Pressed v")
+        document.body.style.background = "violet";
+      }
+    });
+    window.addEventListener("keyup", event => {
+      if (event.key == "v") {
+        document.body.style.background = "";
+      }
+    });
+  </script>
+
+The "keydown" event not only fires when the key is pushed, but as it's
+held the event is repeated.
+
+We can listen for modifier keys aswell. These event strings are:
+'shiftKey'
+'ctrlKey'
+'altKey'
+'metaKey'
+
+e.g.: example 9  (with added repeat checker)
+
+  <p>Press control-space to continue.</p>
+  <img id="bunPic" width="500">
+    <script>
+      const bunPic = document.getElementById("bunPic");
+      window.addEventListener("keydown", event => {
+        if (event.repeat) {return} else {
+        if (event.key == " " && event.ctrlKey) {
+          console.log("Showing Bunny...");
+          bunPic.setAttribute("src", "bunny.jpg");
+        }
+      }});
+      window.addEventListener("keyup", event => {
+        if (event.key == " " || event.ctrlKey) {
+          console.log("Removing Bunny...");
+          bunPic.setAttribute("src", "");
+        }
+      })
+    </script>
+
+The above example was modified from the book. Because the event keeps
+firing while the button is held, we added an if(event.reapet) {return}
+check to prevent the event from occuring repeatedly.
+
+The DOM node where a key event originates depends on the element that
+has focus when the key is pressed. Most nodes cannot have focus unless
+you give them a 'tabindex' attribute, but things like links, buttons, and
+form fields can. We'll come back to form fields in chapter 18. When
+nothing in particular has focus, 'document.body' acts as the target node
+of key events.
+
+Some discussion on the key event methodoly of a user typing text.
+// come back to this some other time.
 
 
 ## Pointer Events
 
+There are currently two widely used ways to point at things on a screen:
+the mouse and touchscreens. These produce different kinds of events.
+
+
+# Mouse clicks
+
+Pressing a mouse button causes a number of events to fire:
+  "mousedown"
+  "mouseup"
+These are similar to the "keydown" and "keyup" events. These happen on
+the DOM nodes that are immediately below the mouse pointer when the
+event occurs.
+
+After the "mouseup" event, a "click" event fires on the most specific
+node that contained both the press and the release of the button.
+
+If two clicks happen close together, a "dblclick" event also fires.
+
+To get precise information about the place where a mouse event happened,
+you can look at its .clientX and .clientY properties, which contain the
+event's coordinates (in pixels) relative to the upper-left corner of the
+window, or .pageX and .pageY, which are relative to the upper-left corner
+of the whole document (which may be different when the window has been
+scrolled).
+
+The follow program implements a primitive drawing application. Every time
+you click the document, it adds a dot under your mouse pointer.
+
+<style>
+  body {
+    height: 200px;
+    background: beige;
+  }
+  
+  .dot {
+    height: 8px; width: 8px;
+    border-radius: 4px;
+    background: teal;
+    position: absolute;
+  }
+</style>
+
+<script>
+  window.addEventListener("click", event => {
+    let dot = document.createElement("div");
+    dot.className = "dot";
+    dot.style.left = (event.pageX - 4) + "px";
+    dot.style.top = (event.pageY - 4) + "px";
+    document.body.appendChild(dot);
+    });
+</script>
+
+
+# Mouse Motion
+
+
+# Touch Events
 
 
 ## Scroll Events

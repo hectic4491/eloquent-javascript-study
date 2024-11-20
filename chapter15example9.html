@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chapter 15 examples</title>
+</head>
+
+<body>
+
+  <p>Press control-space to continue.</p>
+  <img id="bunPic" width="500">
+    <script>
+      const bunPic = document.getElementById("bunPic");
+      window.addEventListener("keydown", event => {
+        if (event.repeat) {return} else {
+        if (event.key == " " && event.ctrlKey) {
+          console.log("Showing Bunny...");
+          bunPic.setAttribute("src", "bunny.jpg");
+        }
+      }});
+      window.addEventListener("keyup", event => {
+        if (event.key == " " || event.ctrlKey) {
+          console.log("Removing Bunny...");
+          bunPic.setAttribute("src", "");
+        }
+      })
+    </script>
+
+</body>
+</html>
