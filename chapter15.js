@@ -350,7 +350,7 @@ As an example, the following program display a bar and sets up event
 handlers so that dragging to the left or right on this bar makes it
 narrower or wider.
 
-e.g.: 11
+e.g.: example 11
 
   <p>Drag the bar to change its width:</p>
   <div style="background: orange; width: 60px; height: 20px">
@@ -416,25 +416,243 @@ highlighting part of a table of conetns or showing a page number).
 The following example draws a progress bar above the document and
 updates it to fill up as you scroll down.
 
+e.g.: example 12
+
+  <style>
+    #progress {
+      border-bottom: 2px solid blue;
+      width: 0;
+      position: fixed;
+      top: 0; left: 0;
+    }
+  </style>
+  <div id="progress"></div>
+  <script>
+    // Create some content
+    document.body.appendChild(document.createTextNode(
+      "taro is round. taro is love. taro is life. taro is all ".repeat(1000)));
+
+    let bar = document.querySelector("#progress");
+    window.addEventListener("scroll", () => {
+      let max = document.body.scrollHeight - innerHeight;
+      bar.style.width = `${(pageYOffset / max) * 100}%`;
+    });
+  </script>
+
+Giving an element a position of fixed acts much like an absolute position
+but also prevents it from scrolling along with the rest of the document.
+The effect is to make our progress bar stay at the top. Its width is
+changed to indicate the current progress. We use % rather than px, as a 
+unit when setting the width so that the element is sized relative to the
+page width.
+
+the global innerHeight binding gives us the height of the window, which
+we must subtract from the total scrollable height. You can't keep
+scrolling when you hit the bottom of the document. There's also an
+innerWidth for the window width. By dividing pageYOffset, the current
+scroll position, by the maximum scroll position and multiplying it by
+100, we get the percentage for the progress bar.
+
+Calling preventDefault on a scroll event does not prevent the scrolling
+from happening. In fact, the event handler is called only /after/ the 
+scrolling takes place.
+
+
 ## Focus Events
 
+When an element gains focus, the browser fires a "focus" event on it.
+When it loses focus, the element gets a "blur" event.
+
+Unlike the events discussed earlier, these two events do not propagate. 
+A handler on a parent element is not notified when a child element gains
+or loses focus.
+
+The following example displays help text for the text field that currently
+has focus:
+
+e.g.: example 13
+
+  <p>Name: <input type="text" data-help="Your full name"></p>
+  <p>Age: <input type="text" data-help="Your age in yeasr"></p>
+  <p id="help"></p>
+
+  <script>
+    let help = document.querySelector("#help");
+    let fields = document.querySelectorAll("input");
+    for (let field of Array.from(fields)) {
+      field.addEventListener("focus", event => {
+        let text = event.target.getAttribute("data-help");
+        help.textContent = text;
+      });
+      field.addEventListener("blur", event => {
+        help.textContent = "";
+      });
+    }
+  </script>
+
+The window object will receive "focus" and "blur" events when the user
+moves from or to the browser tab or window in which the document is shown.
 
 
-## Load Event
+## Load Event !!! important !!!
 
+When a page finished loading, the "load" event fires on the window and
+the document body objects. This is often used to schedule initialization
+actions that require the whole document to have been built. Remember that
+the content of <script> tags is run immediately when the tag is
+encountered. This may be too soon, for example, when the script needs to
+do something with parts of the doccument that appear after the <script>
+tag.
+
+Element such as images and script tags that load an external file also
+have a "load" event that indicates the files they reference were loaded.
+Like the focus-related events, loading events do not propagate.
+
+When you close a page or navigate away from it (for example, by following
+a link), a "beforeunload" event fires. The main use of this event is to
+prevent the user from accidentally losing work by closing a document. If
+you prevent the default behavior on this event and set the returnValue
+property on the event object to a string, the browser will show the user
+a dialog asking if they really want to leave the page. That dialog box
+might include your string, but because some malicious sites try to use
+these dialogs to confuse people into staying on their page to look
+at dodgy weight-loss ads, most browsers no longer display them.
 
 
 ## Events and The Event Loop
 
+In the context of the event loop, as discussed in chapter 11 
+(Asynchronous Programming), browser event handlers behave like other
+asynchronous notifications. They are scheduled when the event occurs but
+must wait for the other scripts that are running to finish before they
+get a chance to run.
 
+The fact that events can be processed only when nothing else is running
+means that if the event loop is tied up with other work, any interaction
+with the page (which happens through events) will be delayed until there's
+time to process it. So if you schedule too much work, either with long-
+running event handlers or with lots of short-running ones, the page will
+become slow and cumbersome to use.
+
+For cases where you really do want to do some time-consuming thing in the
+background without freezing the page, browsers provide something called
+web workers. A worker is a JavaScript process that runs alongside the
+main script, on its own timeline.
+
+Imagine that squaring a number is a heavy, long-running computation that
+we want to perform in a separate thread. We could write a file called
+code/squareworker.js that responds to messages by computing a square and
+sending a message back.
+
+// example:
+//
+//  addEventListener("message", event => {
+//    postMessage(event.data * event.data);
+//  });
+//
+
+To avoid the problems of having multiple threads touching the same data,
+workers do not share their global scope or any other data with the main
+script's environment. Instead, you have to communicate with them by
+sending messages back and forth.
+
+This code spawns a worker running that script, sends it a few messages,
+and outputs the response
+
+let squareWorker = new Worker("code/squareWorker.js");
+squareWorker.addEventListener("message", event => {
+  console.log("The worker responded: ", event.data);
+})
+  squareWorker.postMessage(10);
+  squareWorker.postMessage(24);
+
+The postMessage function sends a message, which will cause a "message"
+event to fire in the receiver. The script that created the worker sends
+and receives messages through the Worker object, whereas the worker talks
+to the script that created it by sending and listening directly on its
+global scope. Only values that can be represented as JSON can be sent
+as messages; the other side will receive a copy of them, rather than the
+value itself.
+ 
 
 ## Timers
 
+The setTimeout function we saw in chapter 11, (Asynchronous Programming)
+scedules another function to be called later, after a given number of
+milliseconds. Sometimes you need to cancel a function you have schedules.
+You can do this by storing the value returned by setTime and calling
+clearTimeout on it.
+
+e.g.: example 14
+
+let bombTimer = setTimeout(() => {
+  console.log("BOOM!");
+}, 500);
+
+if (math.random() < 0.5) { // 50% change
+  console.log("Defused");
+  clearTimeout(bombTimer);
+}
 
 
 ## Debouncing
 
+Some types of events have the potential to fire rapidly many times in a
+row, such as the "mousemove" and "scroll" events. When handling such
+events, you must be careful not to do anything too time-consuming or your
+handler will take up much time that interaction with the document starts
+to feel slow.
 
+If you need to do something nontrivial in such a handler, you can use
+setTimeout to make sure you are not doing it too often. This technique
+is usually called debouncing the event. There are several slightly 
+different approaches to this.
+
+For example, suppose we want to react when the user typed something, but
+we don't want to do it immediately for every input event. When they are
+typing quickly, we just want to wait until a pause occurs. Instead of 
+immediately performing an action in the event handler, we set a timeout.
+We also clear the previous timeout (if any) so that when events occur
+close together (closer than our timeout delay), the timeout from the
+previous event will be canceled.
+
+e.g.: example 15
+
+<textarea>Type something here...</textarea>
+<script>
+  let textarea = document.querySelector("textarea");
+  let timeout;
+  textarea.addEventListener("input", () => {
+    clearTimeout(timeout);
+    time = setTimeout(() => console.log("Typed!"), 500);
+  });
+</script>
+
+Giving an undefined value to clearTimeout or calling it on a
+timeout that has already fired has no effect. Thus, we don't have to be
+careful about when to call it, and we simply do so for every event.
+
+We can use a slightly different pattern if we want to space responses so
+that they're separated by at least a certain length of time but want to
+fire them during a series of events, not just afterward. For example, we
+might want to respond to "mousemove" events by showing the current
+coordinates of the mouse, but only every 250 milliseconds.
+
+e.g.: example 16
+
+<script>
+  let scheduled = null;
+  window.addEventListener("mousemove", event => {
+    if (!scheduled) {
+      setTimeout(() => {
+        document.body.textContent = 
+          `Mouse at ${scheduled.pageX}, ${scheduled.pageY}`;
+        scheduled = null;
+      }, 250);
+    }
+    scheduled = event;
+  });
+</script>
 
 ## Summary
 
@@ -462,3 +680,7 @@ detected with the "focus" and "blur" events. When the document finishes
 loading, a "load" event fires on ther window.
 
 */
+
+// Exercises
+
+// Balloon

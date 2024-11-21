@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chapter 15 examples</title>
+</head>
+
+<body>
+
+  <script>
+    let bombTimer = setTimeout(() => {
+      console.log("BOOM!");
+    }, 500);
+
+    if (Math.random() < 0.5) { // 50% change
+      console.log("Defused");
+      clearTimeout(bombTimer);
+    }
+  <!--Look at the console and refresh the page to see whats happening-->
+  </script>
+
+</body>
+</html>

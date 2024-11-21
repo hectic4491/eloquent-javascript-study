@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chapter 15 examples</title>
+</head>
+
+<body>
+
+<textarea>Type something here...</textarea>
+<script>
+  let textarea = document.querySelector("textarea");
+  let timeout;
+  textarea.addEventListener("input", () => {
+    clearTimeout(timeout);
+    time = setTimeout(() => console.log("Typed!"), 500);
+  });
+</script>
+
+</body>
+</html>
