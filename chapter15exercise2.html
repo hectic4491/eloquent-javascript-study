@@ -24,40 +24,27 @@
 
     let scheduled = null; // Used to store the latest mouse movement.
                           // null is "falsy"
+
+    // This div moves with the mouse.
     let mouseDiv = document.createElement("div");
     mouseDiv.style.position = "absolute";
     document.body.append(mouseDiv);
 
+    // This is our follower element.
     let follower = document.createElement("div");
     follower.setAttribute("class", "trail");
     mouseDiv.appendChild(follower);
 
-    trailElements = document.getElementsByClassName("trail");
-
-
     window.addEventListener("mousemove", event => {
-    // Code inside here executes on mouse movement.
-    // outer while loop for control movement of the elements?
       if (!scheduled) {
         setTimeout(() => {
-            let followerLocation = follower.getBoundingClientRect();
 
-            let mouseLocation = [scheduled.pageX, scheduled.pageY];
-
-            document.getElementsByClassName
-
-            mouseDiv.style.left = scheduled.pageX + 3 + 'px';
-            mouseDiv.style.top = scheduled.pageY + 3 + 'px';
+            mouseDiv.style.left = scheduled.pageX + 8 + 'px';
+            mouseDiv.style.top = scheduled.pageY + 18 + 'px';
             mouseDiv.appendChild(follower);
 
-            console.log(`Mouse location: ${mouseLocation}`);
-
-            console.log(`follower location: ${
-              followerLocation.top + 3}, ${
-              followerLocation.left + 3}`);
-
           scheduled = null;
-        }, 10);
+        }, 100);
       }
       scheduled = event;
     });
