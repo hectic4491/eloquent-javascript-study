@@ -33,7 +33,7 @@ Exercises Skipped:
     -> The Cat's Hat
 
 -> Chapter 15
-    -> Mouse Trail
+    -> Mouse Trail (I have a solution, but it's very simple)
     -> Tabs
 
 

@@ -684,6 +684,12 @@ loading, a "load" event fires on ther window.
 // Exercises
 
 // Balloon
-// ((My Solution. Refer to chapter15exercise files))
+// ((My Solution. Refer to chapter15exercise1 file))
 
 // Mouse Trail
+// ((My Solution. Refer to chapter15exercise2 file))
+// ((My Solution is very simple.))
+
+// Tabs
+//
+//
