@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chapter 15 exercise 2</title>
+
+</head>
+
+<body>
+
+  <style>
+    .trail { /* className for the trail elements */
+      position: absolute;
+      height: 6px; width: 6px;
+      border-radius: 3px;
+      background: teal;
+    }
+    body {
+      height: 300px;
+    }
+  </style>
+  
+    
+  <script>
+
+    let scheduled = null; // Used to store the latest mouse movement.
+                          // null is "falsy"
+    let mouseDiv = document.createElement("div");
+    mouseDiv.style.position = "absolute";
+    document.body.append(mouseDiv);
+
+    let follower = document.createElement("div");
+    follower.setAttribute("class", "trail");
+    mouseDiv.appendChild(follower);
+
+    trailElements = document.getElementsByClassName("trail");
+
+
+    window.addEventListener("mousemove", event => {
+    // Code inside here executes on mouse movement.
+    // outer while loop for control movement of the elements?
+      if (!scheduled) {
+        setTimeout(() => {
+            let followerLocation = follower.getBoundingClientRect();
+
+            let mouseLocation = [scheduled.pageX, scheduled.pageY];
+
+            document.getElementsByClassName
+
+            mouseDiv.style.left = scheduled.pageX + 3 + 'px';
+            mouseDiv.style.top = scheduled.pageY + 3 + 'px';
+            mouseDiv.appendChild(follower);
+
+            console.log(`Mouse location: ${mouseLocation}`);
+
+            console.log(`follower location: ${
+              followerLocation.top + 3}, ${
+              followerLocation.left + 3}`);
+
+          scheduled = null;
+        }, 10);
+      }
+      scheduled = event;
+    });
+  </script>
+
+</body>
+</html>

@@ -32,6 +32,9 @@ Exercises Skipped:
 -> Chapter 14
     -> The Cat's Hat
 
+-> Chapter 15
+    -> Mouse Trail
+    -> Tabs
 
 
 Extra Notes on Chapter 13: (come back to this chapter)
