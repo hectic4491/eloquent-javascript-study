@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chapter 15 examples</title>
+</head>
+
+<body>
+
+  <style>
+    #progress {
+      border-bottom: 2px solid blue;
+      width: 0;
+      position: fixed;
+      top: 0; left: 0;
+    }
+  </style>
+  <div id="progress"></div>
+  <script>
+    // Create some content
+    document.body.appendChild(document.createTextNode(
+      "taro is round. taro is love. taro is life. taro is all ".repeat(1000)));
+
+    let bar = document.querySelector("#progress");
+    window.addEventListener("scroll", () => {
+      let max = document.body.scrollHeight - innerHeight;
+      bar.style.width = `${(pageYOffset / max) * 100}%`;
+    });
+  </script>
+
+</body>
+</html>

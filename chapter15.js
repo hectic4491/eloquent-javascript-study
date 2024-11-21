@@ -311,6 +311,8 @@ scrolled).
 The follow program implements a primitive drawing application. Every time
 you click the document, it adds a dot under your mouse pointer.
 
+e.g.: example 10
+
 <style>
   body {
     height: 200px;
@@ -335,16 +337,84 @@ you click the document, it adds a dot under your mouse pointer.
     });
 </script>
 
+We'll create a less primitive drawing application later in chapter 19.
 
 # Mouse Motion
+
+Every time the mouse pointer moves, a "mousemove" event fires. This event
+can be used to track the position of the mouse. A common situation in
+which this is useful is when implementing some form of mouse-dragging
+functionality.
+
+As an example, the following program display a bar and sets up event
+handlers so that dragging to the left or right on this bar makes it
+narrower or wider.
+
+e.g.: 11
+
+  <p>Drag the bar to change its width:</p>
+  <div style="background: orange; width: 60px; height: 20px">
+  </div>
+  <script>
+    let lastX; // Tracks the last observed mouse X position
+    let bar = document.querySelector("div");
+    bar.addEventListener("mousedown", event => {
+      if (event.button == 0) {
+        lastX = event.clientX;
+        window.addEventListener("mousemove", moved);
+        event.preventDefault(); // Prevent selection
+      }
+    });
+  
+    function moved(event) {
+      if (event.buttons == 0) {
+        window.removeEventListener("mousemove", moved);
+      } else {
+        let dist = event.clientX - lastX;
+        let newWidth = Math.max(10, bar.offsetWidth + dist);
+        bar.style.width = newWidth + "px";
+        lastX = event.clientX;
+      }
+    }
+  </script>
+
+Notice the difference between "event.button" and "event.buttons".
+
+event.button : returns a number indicating which mouse button was pressed
+when the event was triggered:
+  0: main button (usually the left)
+  1: Auxiliary button (usually the middle button (wheel button))
+  2: Secondary button (usually the right)
+  3: Fourth button (usually the browser back thumb button)
+  4: Fifth button (usually the browser forward thumb button)
+
+
+event.buttons returns a number indicating which buttons are currently
+pressed when the event is triggered, expressed as a bitmask. When it
+returns 0, no buttons are down. Otherwise it's the sum of the bitmask
+of the buttons being held down. (i.e. 5 -> main and auxiliary.)
+  1: Main button pressed (left button)
+  2: Secondary button pressed (right button)
+  4: Auxiliary button pressed (middle button)
+  8: Fourth button pressed (Browser Back button)
+  16: Fifth button pressed (Browser Forward button)
 
 
 # Touch Events
 
+// similar to mouse events. Come back to this second later if need be.
+
 
 ## Scroll Events
 
+Whenever an element is scrolled, a "scroll" event is fired on it.
+This has various uses, such as knowing what the user is currently looking
+at (for disabling off-screen animations or sending spy reports to your
+evil headquarters...) or showing some indication of progress (by
+highlighting part of a table of conetns or showing a page number).
 
+The following example draws a progress bar above the document and
+updates it to fill up as you scroll down.
 
 ## Focus Events
 
