@@ -186,7 +186,7 @@ often implicitly make GET requests-to prefetch a resource it believes the
 user will soon need, for example.
 
 
-## Fetch !!Important!! <--TODO
+## Fetch !!Important!!
 
 The interface through which browser JavaScript can make HTTP request is
 called fetch.
@@ -204,6 +204,155 @@ headers. The headers are wrapped in a Map-like object that treats its keys
 (the header names) as case insensitive because header names are not
 supposed to be case sensitive. This means 'headers.get("Content-Type")'
 and 'headers.get("content-TYPE")' will return the same value.
+
+Note that the promise returned by 'fetch' resolves successfully even if
+the server responded with an error code. It can also be rejected if there
+is a network error or if the server to which that the request is
+addressed can't be found.
+
+The first argument to 'fetch' is the URL that should be requested. When
+that URL doesn't start with a protocol name (such as http:), it is 
+treated as a 'relative', which means it is interpreted relative to the
+current document. When it starts with a slash (/), it replaces the
+current path, which is the part after the server name. When it does not,
+the part of the current path up to and including its last slash character
+is put in front of the relative URL.
+
+To get at the actual content of a response, you can use its text method.
+Because the initial promise is resolved as soon asthe response's headers
+have been received and because reading the response body might take a
+while longer, this again returns a promise.
+
+e.g.:
+
+fetch("example/data.txt")
+  .then(resp => resp.text())
+  .then(test => console.log(text));
+  // -> this is the content of data.txt
+
+
+A similar method, called json, returns a promise that resolves to the
+value you get when parsing the body as JSON or rejects if it's not valid
+JSON.
+
+By default, fetch uses the GET method to make its request and does not
+include a request body. You can configure it differently by passing an
+object with extra options as a second argument. For example, this request
+tries to delete example/data.txt:
+
+fetch("example/data.txt", {method: "DELETE"})
+  .then(resp => {
+    console.log(resp.status)
+    // -> 405
+  });
+
+The 405 status code means "method not allowed", and HTTP server's way of
+saying "I'm afraid I can't do that".
+
+To add a request body for a PUT or POST request, you can include a body
+option. To set headers, there's the headers option. For example, this
+request includes a Range header, which instructs the server to return
+only a part of a document.
+
+fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
+  .then(resp => resp.text())
+  .then(console.log);
+  // -> the content
+
+The browser will automatically add some request headers, such as "Host"
+and those needed for the server to figure out the size of the body. But
+adding your own headers is often useful to include things such as
+authentication information or to tell the server which file format you'd
+like to receive.
+
+
+## HTTP Sandboxing
+
+Making HTTP requests in web page scripts once again raises concerns about
+security. The person who controls the script might not have the same
+interests as the person on who computer it is running. More specifically,
+if I visit 'themafia.org', I do not want its scripts to be able to make
+a request to 'mybank.com', using identifying information from my browser,
+with instructions to transfer away all my money.
+
+For this reason, browsers protect us by disallowing scripts to make HTTP
+requests to other domains (names such as themafia.org and mybank.com).
+
+This can be an annoying problem when building systems that want to access
+several domains for legitimate reasons. Fortunately, servers can include
+a header like this in their response to explicity indicate to the browser
+that it is okay for the request to come from another domain:
+
+Access-Control-Allow-Origin: *
+
+
+## Appreciating HTTP !! Important !!
+
+When building a system that requires communication between a JavaScript
+program running in the browser (client-side) and a program on a server 
+(server-side), there are several different ways to model this
+communication.
+
+A commonly used model is that of 'remote procedure calls'. In this model,
+communication follows the patterns of normal function calls, except that
+the function is actually running on another machine. Calling it involves
+making a request to the server that includes the function's name and
+arguments. The response to that request contains the returned value.
+
+When thinking in terms of 'remote procedure calls', HTTP is just a 
+vehicle for communication, and you will most likely write an abstraction
+layer that hides it entirely.
+
+Another approach is to build your communication around the concept of
+resources and HTTP methods. Instead of a remote procedure called addUser,
+you use a PUT request to /users/larry. Instead of encoding that user's
+properties in function arguments, you define a JSON document format (or 
+use an existing format) that represents a user. The body of the PUT
+request to create a new resource in then such a document. A resource is
+fetched by making a GET request to the resource's URL (for example,
+/users/larry), which again returns the document representing the resource.
+
+This second approach makes it easier to use some of the features that
+HTTP provides, such as support for caching resources (keeping a copy of
+a resource on the client for fast access). The concepts used in HTTP, 
+which are well designed, can provide a helpful set of principles to 
+design your server interface around.
+
+
+## Security and HTTP
+
+Data traveling over the internet tends to follow a long, dangerous road.
+To get to its destination, it must hop through anything from coffee shop
+Wi-Fi hotspots to networks controlled by various companies and states. At
+any point along its route, it may be inspected or even modified.
+
+If it is important that something remain secret, such as the password to
+your email account, or that it arrive at its destination unmodified, such
+as the account number you transfer money to via your bank's website, 
+plain HTTP is not good enough.
+
+The secure HTTP protocol, used for URLs starting with https://, wraps
+HTTP traffic in a way that makes it harder to read and tamper with. Before
+exchanging data, the client verifies that the server is who it claims to
+be by asking it to prove that is has a cryptographic certificate issued 
+by a certificate authority that the browser recognizes. Next, all data
+going over the connection is encrypted in a way that should prevent 
+eavesdropping and tampering.
+
+Thus, when it works right, HTTPS prevents other people from impersonating
+the website you are trying to talk to and from snooping on your
+communication. It's not perfect, and there have been various incidents 
+where HTTPS failed because of forged or stolen certificates and broken
+software, but it is a lot safer than plain HTTP.
+
+
+## A bunch about fields...
+
+
+## Storing Data Client-Side ...
+
+
+## Summary
 
 
 */
