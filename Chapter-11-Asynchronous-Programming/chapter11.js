@@ -129,13 +129,45 @@ result instead of passing around callback functions. This way, such
 functions actually return something meaningful, and the shape of the
 program more closely resembles that of synchronous programs.
 
-This is what the standard clas Promise is for...
+This is what the standard class Promise is for. A 'promise' is a receipt
+representing a value that may not be available yet. It provides a '.then'
+method that allows you to register a function that should be called when
+the action for which it is waiting finishes. When the promise is resolved,
+meaning its value becomes available, such functions (there can be multiple)
+are called with the result value. It is possible to call '.then' on a
+promise that has already resolved your function will still be called.
 
+The easiest way to create a promise is by calling Promise.resolve. This 
+function ensures that the value you give it is wrapped in a promise. If
+it's already a promise, it is simply returned. Otherwise, you get a new
+promise that immediately resolves with your value as its result.
+
+let fifteen = Promise.resolve(15);
+fifteen.then(value => console.log(`Got ${value}`));
+// -> Got 15
+
+To create a promise that does not immediately resolve, you can use Promise
+as a constructor. It has a somewhat odd interface: the constructor expects
+a function as its argument, which it immediately calls, passing it a 
+function that it can use to resolve the promise.
+
+For example, this is how you could create a promise-based interface for the
+readTextFile function:
+
+function textFile(filename) {
+  return new Promise(resolve => {
+    readTextFile(filename, text => resolve(text))
+  });
+}
+
+textFile("plans.txt").then(console.log);
 
 
 event loop
 
+
 promises
+
 
 async
 

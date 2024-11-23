@@ -46,3 +46,9 @@ Extra Notes on Chapter 13: (come back to this chapter)
     -> Synchronous and Asynchornous communication.
     -> DNS
     -> URL
+
+
+Questions:
+
+What is a RESTful API?
+
